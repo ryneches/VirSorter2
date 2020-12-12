@@ -92,7 +92,7 @@ rule hmmsearch:
             Inputseq={input}
         else
             # when To_scratch is true, Tmp and Bname should have been defined successfully
-            hmmsearch -T {Hmmsearch_score_min} --tblout {output} --cpu {threads} --noali -o /dev/null $Hmmdb $Tmp/$Bname 2> {log} || {{ echo "See error details in {Wkdir}/{log}" | python {Scriptdir}/echo.py --level error; exit 1; }}
+            {Hmmsearch_path} -T {Hmmsearch_score_min} --tblout {output} --cpu {threads} --noali -o /dev/null $Hmmdb $Tmp/$Bname 2> {log} || {{ echo "See error details in {Wkdir}/{log}" | python {Scriptdir}/echo.py --level error; exit 1; }}
             rm -f $Tmp/$Bname && rmdir $Tmp
         fi
         """
@@ -206,7 +206,7 @@ rule hmmsearch_by_group:
                 Inputseq={input}
             else
                 # when To_scratch is true, Tmp and Bname should have been defined successfully
-                hmmsearch -T {Hmmsearch_score_min} --tblout {output} --cpu {threads} --noali -o /dev/null $Hmmdb $Tmp/$Bname 2> {log} || {{ echo "See error details in {Wkdir}/{log}" | python {Scriptdir}/echo.py --level error; exit 1; }}
+                {Hmmsearch_path} -T {Hmmsearch_score_min} --tblout {output} --cpu {threads} --noali -o /dev/null $Hmmdb $Tmp/$Bname 2> {log} || {{ echo "See error details in {Wkdir}/{log}" | python {Scriptdir}/echo.py --level error; exit 1; }}
                 rm -f $Tmp/$Bname && rmdir $Tmp
             fi
         else

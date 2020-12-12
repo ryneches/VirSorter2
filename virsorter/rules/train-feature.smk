@@ -30,6 +30,7 @@ yaml = YAML()
 with open(src_template) as fp:
     config_default = yaml.load(fp)
 
+Hmmsearch_path = config_default['HMMSEARCH_PATH']
 Hmmsearch_threads = config_default['HMMSEARCH_THREADS']
 General_threads = config_default['GENERAL_THREADS']
 Hmmsearch_score_min = config_default['HMMSEARCH_SCORE_MIN']
@@ -201,6 +202,7 @@ checkpoint split_faa:
 rule hmmsearch:
     input: f'{Tmpdir}/all.pdg.faa.splitdir/all.pdg.faa.{{i}}.split'
     output: temp(f'{Tmpdir}/all.pdg.faa.splitdir/all.pdg.faa.{{i}}.split.{{domain}}.splithmmtbl')
+    path: Hmmsearch_path
     threads: Hmmsearch_threads
     log: f'{Tmpdir}/all.pdg.faa.splitdir/all.pdg.faa.{{i}}.split.{{domain}}.hmm.log'
     conda: '{}/vs2.yaml'.format(Conda_yaml_dir)
@@ -225,9 +227,9 @@ rule hmmsearch:
         fi
         if [ "$To_scratch" = false ]; then
             # local scratch not set or not enough space in local scratch
-            hmmsearch -T {Hmmsearch_score_min} --tblout {output} --cpu {threads} --noali -o /dev/null $Hmmdb {input} &> {log} || {{ echo "See error details in {log}" | python {Scriptdir}/echo.py --level error; exit 1; }}
+            {Hmmsearch_path} -T {Hmmsearch_score_min} --tblout {output} --cpu {threads} --noali -o /dev/null $Hmmdb {input} &> {log} || {{ echo "See error details in {log}" | python {Scriptdir}/echo.py --level error; exit 1; }}
         else
-            hmmsearch -T {Hmmsearch_score_min} --tblout {output} --cpu {threads} --noali -o /dev/null $Hmmdb $Tmp/$Bname &> {log} || {{ echo "See error details in {log}" | python {Scriptdir}/echo.py --level error; exit 1; }}
+            {Hmmsearch_path} -T {Hmmsearch_score_min} --tblout {output} --cpu {threads} --noali -o /dev/null $Hmmdb $Tmp/$Bname &> {log} || {{ echo "See error details in {log}" | python {Scriptdir}/echo.py --level error; exit 1; }}
             rm -f $Tmp/$Bname && rmdir $Tmp
         fi
         """
