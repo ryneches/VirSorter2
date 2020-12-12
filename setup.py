@@ -37,7 +37,7 @@ setup(
     #    'virsorter': ['*']
     #},
     include_package_data=True,  # include all files in MANIFEST.in
-    data_files=[(".", ["README.md", "LICENSE"])],
+    #data_files=[(".", ["README.md", "LICENSE"])],
     install_requires= [
     ],
     # install via conda: click, ruamel.yaml, snakemake
